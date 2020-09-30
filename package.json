@@ -7,7 +7,7 @@
     "start": "node src/server.js",
     "test": "jest",
     "lint": "eslint src/** test/** --fix",
-    "secure-mode": "jest --watchAll --verbose=false"
+    "secure-mode": "jest --watchAll --verbose=true"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "supertest": "3.3.0"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.18.3",
     "consign": "0.1.6",
     "express": "4.16.4",

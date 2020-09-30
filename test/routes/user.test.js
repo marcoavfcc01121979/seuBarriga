@@ -19,10 +19,22 @@ test('Devo inserir usuario com sucesso', () => {
     .then((res) => {
       expect(res.status).toBe(201);
       expect(res.body.name).toBe('Marco Ferreira');
+      expect(res.body).not.toHaveProperty('passwd');
     });
 });
 
-/* test('Não deve inserir usuario sem nome', () => {
+test('Deve armazenar senha criptografada', async () => {
+  const res = await request(app).post('/users')
+    .send({ name: 'Marco Ferreira', mail: `${Date.now()}@mail.com`, passwd: "123456" });
+  expect(res.status).toBe(201);
+
+  const { id } = res.body;
+  const userDB = await app.services.user.findOne({ id });
+  expect(userDB.passwd).not.toBeUndefined();
+  expect(userDB.passwd).not.toBe('123456');
+})
+
+test('Não deve inserir usuario sem nome', () => {
   return request(app).post('/users')
     .send({ mail: 'marco@marco.com', passwd: '123456' })
     .then((res) => {
@@ -39,6 +51,7 @@ test('Não deve inserir usuário sem email', async () => {
   expect(result.body.error).toBe("Email é um atributo obrigátorio.");
 });
 
+
 test("Não deve inserir usuario sem senha", (done) => {
   request(app).post('/users')
     .send({ name: 'Marco Ferreira', mail: 'marco@mail.com' })
@@ -46,7 +59,8 @@ test("Não deve inserir usuario sem senha", (done) => {
       expect(res.status).toBe(400);
       expect(res.body.error).toBe("Senha é um atributo obrigátorio.");
       done();
-    });
+    })
+    .catch(err => done.fail(err));
 });
 
 test('Não deve inserir usuário com email existente', () => {
@@ -57,4 +71,3 @@ test('Não deve inserir usuário com email existente', () => {
       expect(res.body.error).toBe("Já existe um usuário com esse mail.");
     });
 });
-*/
