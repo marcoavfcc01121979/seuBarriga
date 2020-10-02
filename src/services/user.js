@@ -1,5 +1,7 @@
-const ValidationError = require('../errors/validationError');
+// import bcrypt from 'bcrypt-nodejs';
+
 const bcrypt = require('bcrypt-nodejs');
+const ValidationError = require('../errors/validationError');
 
 module.exports = (app) => {
   const findAll = () => {
@@ -8,12 +10,12 @@ module.exports = (app) => {
 
   const findOne = (filter = {}) => {
     return app.db('users').where(filter).first();
-  }
+  };
 
   const getPasswdHash = (passwd) => {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(passwd, salt);
-  }
+  };
 
   const save = async (user) => {
     if (!user.name) throw new ValidationError('Nome é um atributo obrigátorio.');
@@ -28,6 +30,6 @@ module.exports = (app) => {
     return app.db('users').insert(newUser, ['id', 'name', 'mail']);
   };
 
-  
+
   return { findAll, save, findOne };
 };
