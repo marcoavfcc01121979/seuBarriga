@@ -145,15 +145,15 @@ test('Não deve inserir uma transação sem tipo', () => {
     });
 });
 
-test.skip('Não deve inserir uma transação com tipo inválido', () => {
+test('Não deve inserir uma transação com tipo inválido', () => {
   request(app).post(MAIN_ROUTE)
     .set('authorization', `bearer ${user.token}`)
     .send({
-      description: 'New T', date: new Date(), amount: 200, type: 2, acc_id: accUser.id,
+      description: 'New T', date: new Date(), amount: 200, type: 'A', acc_id: accUser.id,
     })
     .then((res) => {
       expect(res.status).toBe(400);
-      expect(res.body.error).toBe('Tipo é atributo que tem que ser válido 1 ou 0.');
+      expect(res.body.error).toBe('Tipo inválido.');
     });
 });
 
@@ -209,4 +209,17 @@ test('Não deve remover uma transação de outro usuario.', () => {
       expect(res.status).toBe(403);
       expect(res.body.error).toBe('Este recurso não pertence ao usuário.');
     });
+});
+
+test('Não deve remover uma conta com transação', () => {
+  return app.db('transactions')
+    .insert({
+      description: 'ADD TRANSACTION', date: new Date(), amount: 100, type: '1', acc_id: accUser.id,
+    }, ['id'])
+    .then(() => request(app).delete(`/v1/accounts/${accUser.id}`)
+      .set('authorization', `bearer ${user.token}`)
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body.error).toBe('Essas contas possui transações associadas.');
+      }));
 });

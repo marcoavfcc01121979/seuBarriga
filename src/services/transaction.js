@@ -22,7 +22,7 @@ module.exports = (app) => {
     if (!transaction.acc_id) throw new ValidationError('Conta é uma atributo obrigátorio.');
     if (!transaction.type) throw new ValidationError('Tipo é uma atributo obrigátorio.');
 
-    // if (transaction.type !== 1 && transaction.type !== 0) throw new ValidationError('Tipo é atributo que tem que ser válido 1 ou 0.');
+    if (!(transaction.type === '1' || transaction.type === '0')) throw new ValidationError('Tipo inválido.');
 
     const newTransaction = { ...transaction };
     if ((transaction.type === '1' && transaction.amount < 0)
