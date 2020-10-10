@@ -1,5 +1,5 @@
 const express = require('express');
-const RecursoIndevidoError = require('../errors/RecursoIndevidoError');
+// const RecursoIndevidoError = require('../errors/RecursoIndevidoError');
 
 module.exports = (app) => {
   const router = express.Router();
