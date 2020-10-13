@@ -1,5 +1,4 @@
 const express = require('express');
-const transaction = require('../services/transaction');
 const RecursoIndevidoError = require('../errors/RecursoIndevidoError');
 
 module.exports = (app) => {
